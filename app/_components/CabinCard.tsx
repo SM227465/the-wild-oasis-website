@@ -1,6 +1,7 @@
 import { UsersIcon } from "@heroicons/react/24/solid";
+import { ICabin } from "../_interfaces/cabin";
 
-function CabinCard({ cabin }) {
+function CabinCard({ cabin }: {cabin : ICabin}) {
   const { id, name, maxCapacity, regularPrice, discount, image } = cabin;
 
   return (
