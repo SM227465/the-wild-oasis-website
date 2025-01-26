@@ -1,7 +1,11 @@
-import ReservationCard from '@/app/_components/ReservationCard';
+import ReservationCard from '../../_components/ReservationCard';
 import { IBookingDetails } from '../../_interfaces/booking';
 
-export default function Page() {
+export const metadata = {
+  title: 'Reservations',
+};
+
+const Page = () => {
   // CHANGE
   const bookings: IBookingDetails[] = [];
 
@@ -25,4 +29,6 @@ export default function Page() {
       )}
     </div>
   );
-}
+};
+
+export default Page;

@@ -1,4 +1,8 @@
-export default function Page() {
+export const metadata = {
+  title: 'Update profile',
+};
+
+const Page = () => {
   // CHANGE
   const countryFlag = 'pt.jpg';
   const nationality = 'portugal';
@@ -55,4 +59,6 @@ export default function Page() {
       </form>
     </div>
   );
-}
+};
+
+export default Page;
