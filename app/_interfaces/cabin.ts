@@ -5,4 +5,5 @@ export interface ICabin {
   regularPrice: number;
   discount: number;
   image: string;
+  description: string;
 }

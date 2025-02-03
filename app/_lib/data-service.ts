@@ -1,27 +1,35 @@
 import { eachDayOfInterval } from 'date-fns';
 import supabase from './supabase';
+import { notFound } from 'next/navigation';
 
-/////////////
-// GET
-
-export async function getCabin(id: number) {
-  const { data, error } = await supabase.from('cabins').select('*').eq('id', id).single();
+export const getCabin = async (id: number) => {
+  const { data, error } = await supabase
+    .from('cabins')
+    .select('*')
+    .eq('id', id)
+    .single();
 
   // For testing
   // await new Promise((res) => setTimeout(res, 1000));
 
   if (error) {
     console.error(error);
+    notFound();
   }
 
   return data;
-}
+};
 
 export async function getCabinPrice(id: number) {
-  const { data, error } = await supabase.from('cabins').select('regularPrice, discount').eq('id', id).single();
+  const { data, error } = await supabase
+    .from('cabins')
+    .select('regularPrice, discount')
+    .eq('id', id)
+    .single();
 
   if (error) {
     console.error(error);
+    throw new Error('Unable to load cabin details!');
   }
 
   return data;
@@ -30,7 +38,7 @@ export async function getCabinPrice(id: number) {
 export const getCabins = async () => {
   const { data, error } = await supabase
     .from('cabins')
-    .select('id, name, maxCapacity, regularPrice, discount, image')
+    .select('id, name, maxCapacity, regularPrice, discount, image, description')
     .order('name');
 
   if (error) {
@@ -43,14 +51,22 @@ export const getCabins = async () => {
 
 // Guests are uniquely identified by their email address
 export async function getGuest(email: string) {
-  const { data, error } = await supabase.from('guests').select('*').eq('email', email).single();
+  const { data, error } = await supabase
+    .from('guests')
+    .select('*')
+    .eq('email', email)
+    .single();
 
   // No error here! We handle the possibility of no guest in the sign in callback
   return data;
 }
 
 export async function getBooking(id: number) {
-  const { data, error, count } = await supabase.from('bookings').select('*').eq('id', id).single();
+  const { data, error, count } = await supabase
+    .from('bookings')
+    .select('*')
+    .eq('id', id)
+    .single();
 
   if (error) {
     console.error(error);
@@ -121,7 +137,9 @@ export async function getSettings() {
 
 export async function getCountries() {
   try {
-    const res = await fetch('https://restcountries.com/v2/all?fields=name,flag');
+    const res = await fetch(
+      'https://restcountries.com/v2/all?fields=name,flag'
+    );
     const countries = await res.json();
     return countries;
   } catch {
