@@ -10,9 +10,6 @@ export const getCabin = async (id: number) => {
     .eq('id', id)
     .single();
 
-  // For testing
-  // await new Promise((res) => setTimeout(res, 1000));
-
   if (error) {
     console.error(error);
     notFound();
@@ -95,37 +92,37 @@ export async function getBooking(id: number) {
 //   return data;
 // }
 
-// export async function getBookedDatesByCabinId(cabinId) {
-//   let today = new Date();
-//   today.setUTCHours(0, 0, 0, 0);
-//   today = today.toISOString();
+export const getBookedDatesByCabinId = async (cabinId: number) => {
+  let today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  const todayISOString: string = today.toISOString();
 
-//   // Getting all bookings
-//   const { data, error } = await supabase
-//     .from('bookings')
-//     .select('*')
-//     .eq('cabinId', cabinId)
-//     .or(`startDate.gte.${today},status.eq.checked-in`);
+  // Getting all bookings
+  const { data, error } = await supabase
+    .from('bookings')
+    .select('*')
+    .eq('cabinId', cabinId)
+    .or(`startDate.gte.${todayISOString},status.eq.checked-in`);
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error('Bookings could not get loaded');
-//   }
+  if (error) {
+    console.error(error);
+    throw new Error('Bookings could not get loaded');
+  }
 
-//   // Converting to actual dates to be displayed in the date picker
-//   const bookedDates = data
-//     .map((booking) => {
-//       return eachDayOfInterval({
-//         start: new Date(booking.startDate),
-//         end: new Date(booking.endDate),
-//       });
-//     })
-//     .flat();
+  // Converting to actual dates to be displayed in the date picker
+  const bookedDates = data
+    .map((booking) => {
+      return eachDayOfInterval({
+        start: new Date(booking.startDate),
+        end: new Date(booking.endDate),
+      });
+    })
+    .flat();
 
-//   return bookedDates;
-// }
+  return bookedDates;
+};
 
-export async function getSettings() {
+export const getSettings = async () => {
   const { data, error } = await supabase.from('settings').select('*').single();
 
   if (error) {
@@ -134,7 +131,7 @@ export async function getSettings() {
   }
 
   return data;
-}
+};
 
 export async function getCountries() {
   try {
