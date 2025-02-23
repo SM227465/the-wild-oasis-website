@@ -1,4 +1,7 @@
+'use client';
+
 import { ICabin } from '../_interfaces/cabin';
+import { useReservation } from './ReservationContext';
 
 interface Props {
   cabin: ICabin;
@@ -7,6 +10,7 @@ interface Props {
 const ReservationForm = (props: Props) => {
   const { cabin } = props;
   const { maxCapacity } = cabin;
+  const { range } = useReservation();
 
   return (
     <div className='scale-[1.01]'>
