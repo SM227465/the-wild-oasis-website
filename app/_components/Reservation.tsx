@@ -1,6 +1,8 @@
 import { ICabin } from '../_interfaces/cabin';
+import { auth } from '../_lib/auth';
 import { getBookedDatesByCabinId, getSettings } from '../_lib/data-service';
 import DateSelector from './DateSelector';
+import LoginMessage from './LoginMessage';
 import ReservationForm from './ReservationForm';
 
 interface Props {
@@ -15,7 +17,7 @@ const Reservation = async (props: Props) => {
     getBookedDatesByCabinId(Number(cabin.id)),
   ]);
 
-  console.log(bookedDates);
+  const session = await auth();
 
   return (
     <div className='grid grid-cols-2 border border-primary-800 min-h-[400px]'>
@@ -24,7 +26,11 @@ const Reservation = async (props: Props) => {
         cabin={cabin}
         settings={settings}
       />
-      <ReservationForm cabin={cabin} />
+      {session?.user ? (
+        <ReservationForm cabin={cabin} user={session.user} />
+      ) : (
+        <LoginMessage />
+      )}
     </div>
   );
 };
