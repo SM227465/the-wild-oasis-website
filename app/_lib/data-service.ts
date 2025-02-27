@@ -1,14 +1,11 @@
 import { eachDayOfInterval } from 'date-fns';
-import supabase from './supabase';
 import { notFound } from 'next/navigation';
 import { ICountry } from '../_interfaces/country';
+import { IGuest } from '../_interfaces/guest';
+import supabase from './supabase';
 
 export const getCabin = async (id: number) => {
-  const { data, error } = await supabase
-    .from('cabins')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const { data, error } = await supabase.from('cabins').select('*').eq('id', id).single();
 
   if (error) {
     console.error(error);
@@ -19,11 +16,7 @@ export const getCabin = async (id: number) => {
 };
 
 export async function getCabinPrice(id: number) {
-  const { data, error } = await supabase
-    .from('cabins')
-    .select('regularPrice, discount')
-    .eq('id', id)
-    .single();
+  const { data, error } = await supabase.from('cabins').select('regularPrice, discount').eq('id', id).single();
 
   if (error) {
     console.error(error);
@@ -47,24 +40,14 @@ export const getCabins = async () => {
   return data;
 };
 
-// Guests are uniquely identified by their email address
-export async function getGuest(email: string) {
-  const { data, error } = await supabase
-    .from('guests')
-    .select('*')
-    .eq('email', email)
-    .single();
+export const getGuest = async (email: string) => {
+  const { data, error } = await supabase.from('guests').select('*').eq('email', email).single();
 
-  // No error here! We handle the possibility of no guest in the sign in callback
-  return data;
-}
+  return data as IGuest;
+};
 
 export async function getBooking(id: number) {
-  const { data, error, count } = await supabase
-    .from('bookings')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const { data, error, count } = await supabase.from('bookings').select('*').eq('id', id).single();
 
   if (error) {
     console.error(error);
@@ -135,9 +118,7 @@ export const getSettings = async () => {
 
 export async function getCountries() {
   try {
-    const res = await fetch(
-      'https://restcountries.com/v2/all?fields=name,flag'
-    );
+    const res = await fetch('https://restcountries.com/v2/all?fields=name,flag');
     const countries = (await res.json()) as ICountry[];
     return countries;
   } catch {
@@ -148,16 +129,16 @@ export async function getCountries() {
 /////////////
 // CREATE
 
-// export async function createGuest(newGuest) {
-//   const { data, error } = await supabase.from('guests').insert([newGuest]);
+export const createGuest = async (newGuest: any) => {
+  const { data, error } = await supabase.from('guests').insert([newGuest]);
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error('Guest could not be created');
-//   }
+  if (error) {
+    console.error(error);
+    throw new Error('Guest could not be created');
+  }
 
-//   return data;
-// }
+  return data;
+};
 
 // export async function createBooking(newBooking) {
 //   const { data, error } = await supabase
