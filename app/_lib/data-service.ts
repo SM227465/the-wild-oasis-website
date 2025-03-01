@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { ICountry } from '../_interfaces/country';
 import { IGuest } from '../_interfaces/guest';
 import supabase from './supabase';
+import { IBookingDetails } from '../_interfaces/booking';
 
 export const getCabin = async (id: number) => {
   const { data, error } = await supabase.from('cabins').select('*').eq('id', id).single();
@@ -16,7 +17,11 @@ export const getCabin = async (id: number) => {
 };
 
 export async function getCabinPrice(id: number) {
-  const { data, error } = await supabase.from('cabins').select('regularPrice, discount').eq('id', id).single();
+  const { data, error } = await supabase
+    .from('cabins')
+    .select('regularPrice, discount')
+    .eq('id', id)
+    .single();
 
   if (error) {
     console.error(error);
@@ -46,7 +51,7 @@ export const getGuest = async (email: string) => {
   return data as IGuest;
 };
 
-export async function getBooking(id: number) {
+export const getBooking = async (id: number) => {
   const { data, error, count } = await supabase.from('bookings').select('*').eq('id', id).single();
 
   if (error) {
@@ -55,25 +60,24 @@ export async function getBooking(id: number) {
   }
 
   return data;
-}
+};
 
-// export async function getBookings(guestId) {
-//   const { data, error, count } = await supabase
-//     .from('bookings')
-//     // We actually also need data on the cabins as well. But let's ONLY take the data that we actually need, in order to reduce downloaded data.
-//     .select(
-//       'id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, cabins(name, image)'
-//     )
-//     .eq('guestId', guestId)
-//     .order('startDate');
+export const getBookings = async (guestId: number) => {
+  const { data, error, count } = await supabase
+    .from('bookings')
+    .select(
+      'id, created_at, startDate, endDate, numberOfNights, numberOfGuests, totalPrice, guestId, cabinId, cabins(name, image)'
+    )
+    .eq('guestId', guestId)
+    .order('startDate');
 
-//   if (error) {
-//     console.error(error);
-//     throw new Error('Bookings could not get loaded');
-//   }
+  if (error) {
+    console.error(error);
+    throw new Error('Bookings could not get loaded');
+  }
 
-//   return data;
-// }
+  return data as unknown as IBookingDetails[];
+};
 
 export const getBookedDatesByCabinId = async (cabinId: number) => {
   let today = new Date();

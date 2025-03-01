@@ -5,7 +5,7 @@ export interface IGuest {
   lastName: string | null;
   fullName: string;
   email: string;
-  nationality: string | null;
-  countryFlag: string | null;
-  nationalId: string | null;
+  nationality: string;
+  countryFlag: string;
+  nationalId: string;
 }

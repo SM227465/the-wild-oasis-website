@@ -13,10 +13,7 @@ const SelectCountry = async (props: Props) => {
   const { className, defaultCountry, id, name } = props;
 
   const countries = await getCountries();
-  const flag =
-    countries.find((country) => country.name === defaultCountry)?.flag ?? '';
-
-  console.log({ flag });
+  const flag = countries.find((country) => country.name === defaultCountry)?.flag ?? '';
 
   return (
     <select
