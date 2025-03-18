@@ -7,6 +7,8 @@ export interface IBooking {
   numberOfGuests: number;
   status: 'unconfirmed' | 'checked-in' | 'checked-out';
   totalPrice: number;
+  observations: string;
+  cabinId: number;
   cabins: {
     name: string;
   };

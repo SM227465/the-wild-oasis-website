@@ -3,7 +3,8 @@ import { notFound } from 'next/navigation';
 import { ICountry } from '../_interfaces/country';
 import { IGuest } from '../_interfaces/guest';
 import supabase from './supabase';
-import { IBookingDetails } from '../_interfaces/booking';
+import { IBooking, IBookingDetails } from '../_interfaces/booking';
+import { ICabin } from '../_interfaces/cabin';
 
 export const getCabin = async (id: number) => {
   const { data, error } = await supabase.from('cabins').select('*').eq('id', id).single();
@@ -13,7 +14,7 @@ export const getCabin = async (id: number) => {
     notFound();
   }
 
-  return data;
+  return data as ICabin;
 };
 
 export async function getCabinPrice(id: number) {
@@ -59,7 +60,7 @@ export const getBooking = async (id: number) => {
     throw new Error('Booking could not get loaded');
   }
 
-  return data;
+  return data as IBooking;
 };
 
 export const getBookings = async (guestId: number) => {
