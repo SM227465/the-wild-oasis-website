@@ -1,7 +1,6 @@
-import { getBookings } from '@/app/_lib/data-service';
-import ReservationCard from '../../_components/ReservationCard';
-import { IBookingDetails } from '../../_interfaces/booking';
-import { auth } from '@/app/_lib/auth';
+import { auth } from '../../_lib/auth';
+import { getBookings } from '../../_lib/data-service';
+import ReservationList from '../../_components/ReservationList';
 
 export const metadata = {
   title: 'Reservations',
@@ -23,11 +22,7 @@ const Page = async () => {
           </a>
         </p>
       ) : (
-        <ul className='space-y-6'>
-          {bookings.map((booking) => (
-            <ReservationCard booking={booking} key={booking.id} />
-          ))}
-        </ul>
+        <ReservationList bookings={bookings} />
       )}
     </div>
   );
