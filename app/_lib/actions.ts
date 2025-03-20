@@ -59,7 +59,7 @@ export const updateGuestProfile = async (formData: FormData) => {
   revalidatePath('/account/profile');
 };
 
-export const deleteReservation = async (bookingId: number) => {
+export const deleteBooking = async (bookingId: number) => {
   const session = await auth();
 
   if (!session) {
@@ -123,4 +123,37 @@ export const updateBooking = async (formData: FormData) => {
   revalidatePath('/account/reservations');
   revalidatePath(`/account/reservations/edit/${bookingId}`);
   redirect('/account/reservations');
+};
+
+export const createBooking = async (formData: FormData) => {
+  const session = await auth();
+
+  if (!session) {
+    throw new Error('You must be logged in!');
+  }
+
+  const newBooking = {
+    numberOfGuests: Number(formData.get('numberOfGuests')),
+    numberOfNights: Number(formData.get('numberOfNights')),
+    cabinPrice: parseFloat(formData.get('cabinPrice') as string),
+    cabinId: Number(formData.get('cabinId')),
+    startDate: formData.get('startDate'),
+    endDate: formData.get('endDate'),
+    observations: formData.get('observations')?.slice(0, 1000),
+    guestId: session.user.guestId,
+    extrasPrice: 0,
+    totalPrice: parseFloat(formData.get('cabinPrice') as string),
+    isPaid: false,
+    hasBreakfast: false,
+    status: 'unconfirmed',
+  };
+
+  const { error } = await supabase.from('bookings').insert([newBooking]);
+
+  if (error) {
+    throw new Error('Booking could not be created');
+  }
+
+  revalidatePath(`/cabins/${newBooking.cabinId}`);
+  redirect('/cabins/thankyou');
 };

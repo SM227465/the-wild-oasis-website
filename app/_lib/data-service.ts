@@ -10,7 +10,6 @@ export const getCabin = async (id: number) => {
   const { data, error } = await supabase.from('cabins').select('*').eq('id', id).single();
 
   if (error) {
-    console.error(error);
     notFound();
   }
 
@@ -25,7 +24,6 @@ export async function getCabinPrice(id: number) {
     .single();
 
   if (error) {
-    console.error(error);
     throw new Error('Unable to load cabin details!');
   }
 
@@ -39,7 +37,6 @@ export const getCabins = async () => {
     .order('name');
 
   if (error) {
-    console.error(error);
     throw new Error('Cabins could not be loaded');
   }
 
@@ -56,7 +53,6 @@ export const getBooking = async (id: number) => {
   const { data, error, count } = await supabase.from('bookings').select('*').eq('id', id).single();
 
   if (error) {
-    console.error(error);
     throw new Error('Booking could not get loaded');
   }
 
@@ -64,7 +60,7 @@ export const getBooking = async (id: number) => {
 };
 
 export const getBookings = async (guestId: number) => {
-  const { data, error, count } = await supabase
+  const { data, error } = await supabase
     .from('bookings')
     .select(
       'id, created_at, startDate, endDate, numberOfNights, numberOfGuests, totalPrice, guestId, cabinId, cabins(name, image)'
@@ -73,7 +69,6 @@ export const getBookings = async (guestId: number) => {
     .order('startDate');
 
   if (error) {
-    console.error(error);
     throw new Error('Bookings could not get loaded');
   }
 
@@ -93,7 +88,6 @@ export const getBookedDatesByCabinId = async (cabinId: number) => {
     .or(`startDate.gte.${todayISOString},status.eq.checked-in`);
 
   if (error) {
-    console.error(error);
     throw new Error('Bookings could not get loaded');
   }
 
@@ -114,7 +108,6 @@ export const getSettings = async () => {
   const { data, error } = await supabase.from('settings').select('*').single();
 
   if (error) {
-    console.error(error);
     throw new Error('Settings could not be loaded');
   }
 
@@ -131,79 +124,12 @@ export async function getCountries() {
   }
 }
 
-/////////////
-// CREATE
-
 export const createGuest = async (newGuest: any) => {
   const { data, error } = await supabase.from('guests').insert([newGuest]);
 
   if (error) {
-    console.error(error);
     throw new Error('Guest could not be created');
   }
 
   return data;
 };
-
-// export async function createBooking(newBooking) {
-//   const { data, error } = await supabase
-//     .from('bookings')
-//     .insert([newBooking])
-//     // So that the newly created object gets returned!
-//     .select()
-//     .single();
-
-//   if (error) {
-//     console.error(error);
-//     throw new Error('Booking could not be created');
-//   }
-
-//   return data;
-// }
-
-/////////////
-// UPDATE
-
-// The updatedFields is an object which should ONLY contain the updated data
-// export async function updateGuest(id, updatedFields) {
-//   const { data, error } = await supabase
-//     .from('guests')
-//     .update(updatedFields)
-//     .eq('id', id)
-//     .select()
-//     .single();
-
-//   if (error) {
-//     console.error(error);
-//     throw new Error('Guest could not be updated');
-//   }
-//   return data;
-// }
-
-// export async function updateBooking(id, updatedFields) {
-//   const { data, error } = await supabase
-//     .from('bookings')
-//     .update(updatedFields)
-//     .eq('id', id)
-//     .select()
-//     .single();
-
-//   if (error) {
-//     console.error(error);
-//     throw new Error('Booking could not be updated');
-//   }
-//   return data;
-// }
-
-/////////////
-// DELETE
-
-// export async function deleteBooking(id) {
-//   const { data, error } = await supabase.from('bookings').delete().eq('id', id);
-
-//   if (error) {
-//     console.error(error);
-//     throw new Error('Booking could not be deleted');
-//   }
-//   return data;
-// }
